@@ -8,6 +8,9 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import com.joaogabriel.dev.biblioteca.service.global.MethodArgumentNotValidException;
+import com.joaogabriel.dev.biblioteca.service.global.ObjectNotFoundException;
+
+import jakarta.servlet.http.HttpServletRequest;
 
 @ControllerAdvice
 public class GlobalExceptions {
@@ -32,5 +35,17 @@ public class GlobalExceptions {
         message.put("timestamp", System.currentTimeMillis());
 
         return ResponseEntity.unprocessableContent().body(message);
+    }
+
+    @ExceptionHandler(ObjectNotFoundException.class)
+    public ResponseEntity<Map<String, Object>> objectNotFoundException(ObjectNotFoundException exc, HttpServletRequest request){
+        Map<String, Object> message = new HashMap<>();
+        message.put("error", "Objeto não encontrado.");
+        message.put("status", 404);
+        message.put("message", exc.getMessage());
+        message.put("path", request.getRequestURI());
+        message.put("timestamp", System.currentTimeMillis());
+
+        return ResponseEntity.status(404).body(message);
     }
 }

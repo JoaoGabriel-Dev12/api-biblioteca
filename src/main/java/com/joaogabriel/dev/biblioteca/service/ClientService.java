@@ -1,5 +1,7 @@
 package com.joaogabriel.dev.biblioteca.service;
 
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 
 import com.joaogabriel.dev.biblioteca.dtos.ClientRequest;
@@ -7,6 +9,7 @@ import com.joaogabriel.dev.biblioteca.dtos.ClientResponse;
 import com.joaogabriel.dev.biblioteca.model.Client;
 import com.joaogabriel.dev.biblioteca.repository.ClientRepository;
 import com.joaogabriel.dev.biblioteca.service.global.MethodArgumentNotValidException;
+import com.joaogabriel.dev.biblioteca.service.global.ObjectNotFoundException;
 
 @Service
 public class ClientService {
@@ -30,6 +33,23 @@ public class ClientService {
         ClientResponse response = new ClientResponse(client.getId(), client.getNome(), client.getEmail(),
                         client.getTelefone(), client.getCpf(), client.getEndereço());
         return response;
+    }
+
+    public ClientResponse getById(Long id){
+        Client client = repo.findById(id).orElseThrow(() -> new ObjectNotFoundException(id));
+        
+        ClientResponse response = new ClientResponse(client.getId(), client.getNome(), client.getEmail(),
+                        client.getTelefone(), client.getCpf(), client.getEndereço());
+        return response;
+    }
+
+    public List<ClientResponse> getAll(){
+        List<ClientResponse> listClients = repo.findAll()
+            .stream().map(c -> new ClientResponse(
+                c.getId(), c.getNome(), c.getEmail(), c.getTelefone(), c.getCpf(), c.getEndereço()
+            )).toList();
+        
+        return listClients;
     }
 
     private boolean fieldIsNull(ClientRequest dto){
