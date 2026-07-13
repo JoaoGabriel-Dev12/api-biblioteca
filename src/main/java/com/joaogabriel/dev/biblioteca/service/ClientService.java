@@ -2,6 +2,7 @@ package com.joaogabriel.dev.biblioteca.service;
 
 import java.util.List;
 
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import com.joaogabriel.dev.biblioteca.dtos.ClientRequest;
@@ -14,10 +15,10 @@ import com.joaogabriel.dev.biblioteca.service.global.ObjectNotFoundException;
 @Service
 public class ClientService {
 
-    private final ClientRepository repo;
+    private final ClientRepository repository;
 
-    public ClientService(ClientRepository repo) {
-        this.repo = repo;
+    public ClientService(ClientRepository repository) {
+        this.repository = repository;
     }
 
     public ClientResponse save(ClientRequest dto){
@@ -29,27 +30,35 @@ public class ClientService {
             throw new MethodArgumentNotValidException("Campos vazios no corpo da requisição");
         }
         
-        Client client = repo.save(new Client(null, dto.nome(), dto.email(), dto.telefone(), dto.cpf(), dto.endereco()));
-        ClientResponse response = new ClientResponse(client.getId(), client.getNome(), client.getEmail(),
-                        client.getTelefone(), client.getCpf(), client.getEndereço());
+        Client client = repository.save(new Client(null, dto.nome(), dto.email(), dto.telefone(), dto.cpf(), dto.endereco()));
+        ClientResponse response = toResponse(client);
         return response;
     }
 
+    @Cacheable(value = "usuarios", key = "#id")
     public ClientResponse getById(Long id){
-        Client client = repo.findById(id).orElseThrow(() -> new ObjectNotFoundException(id));
+        Client client = repository.findById(id).orElseThrow(() -> new ObjectNotFoundException(id));
         
-        ClientResponse response = new ClientResponse(client.getId(), client.getNome(), client.getEmail(),
-                        client.getTelefone(), client.getCpf(), client.getEndereço());
+        ClientResponse response = toResponse(client);
         return response;
     }
 
     public List<ClientResponse> getAll(){
-        List<ClientResponse> listClients = repo.findAll()
-            .stream().map(c -> new ClientResponse(
-                c.getId(), c.getNome(), c.getEmail(), c.getTelefone(), c.getCpf(), c.getEndereço()
-            )).toList();
+        List<ClientResponse> listClients = repository.findAll()
+            .stream().map(this::toResponse).toList();
         
         return listClients;
+    }
+
+    private ClientResponse toResponse(Client client){
+        return new ClientResponse(
+            client.getId(),
+            client.getNome(),
+            client.getEmail(),
+            client.getTelefone(),
+            client.getCpf(),
+            client.getEndereço()
+        );
     }
 
     private boolean fieldIsNull(ClientRequest dto){
