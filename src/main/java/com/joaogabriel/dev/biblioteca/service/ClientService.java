@@ -16,9 +16,11 @@ import com.joaogabriel.dev.biblioteca.service.global.ObjectNotFoundException;
 public class ClientService {
 
     private final ClientRepository repository;
+    private final MailService mailService;
 
-    public ClientService(ClientRepository repository) {
+    public ClientService(ClientRepository repository, MailService mailService) {
         this.repository = repository;
+        this.mailService = mailService;
     }
 
     public ClientResponse save(ClientRequest dto){
@@ -32,6 +34,8 @@ public class ClientService {
         
         Client client = repository.save(new Client(null, dto.nome(), dto.email(), dto.telefone(), dto.cpf(), dto.endereco()));
         ClientResponse response = toResponse(client);
+        mailService.sendMailCreateAccount(response.email(), response.nome());
+
         return response;
     }
 
