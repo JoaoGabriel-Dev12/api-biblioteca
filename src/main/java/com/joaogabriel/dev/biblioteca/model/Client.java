@@ -1,11 +1,16 @@
 package com.joaogabriel.dev.biblioteca.model;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 @Entity
@@ -21,6 +26,10 @@ public class Client implements Serializable{
     private String telefone;
     private String cpf;
     private String endereço;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "client")
+    private List<Loan> loans = new ArrayList<>(); 
 
     public Client(){
     }
@@ -80,6 +89,10 @@ public class Client implements Serializable{
 
     public void setEndereço(String endereço) {
         this.endereço = endereço;
+    }
+
+    public List<Loan> getLoans() {
+        return loans;
     }
 
     @Override

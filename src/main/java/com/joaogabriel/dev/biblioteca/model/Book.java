@@ -1,7 +1,10 @@
 package com.joaogabriel.dev.biblioteca.model;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.joaogabriel.dev.biblioteca.model.enums.BookStatus;
 
 import jakarta.persistence.Column;
@@ -9,6 +12,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
 @Entity
@@ -25,6 +30,10 @@ public class Book implements Serializable{
     private String autor;
     private Integer anoLancamento;
     private BookStatus status;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "book")
+    private List<Loan> loans = new ArrayList<>();
 
     public Book(){
     }
@@ -93,6 +102,10 @@ public class Book implements Serializable{
 
     public BookStatus getStatus() {
         return status;
+    }
+
+    public List<Loan> getLoans() {
+        return loans;
     }
 
     @Override
