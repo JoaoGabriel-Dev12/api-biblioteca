@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+import com.joaogabriel.dev.biblioteca.service.global.BookNotFreeException;
 import com.joaogabriel.dev.biblioteca.service.global.MethodArgumentNotValidException;
 import com.joaogabriel.dev.biblioteca.service.global.ObjectNotFoundException;
 
@@ -47,5 +48,16 @@ public class GlobalExceptions {
         message.put("timestamp", System.currentTimeMillis());
 
         return ResponseEntity.status(404).body(message);
+    }
+
+    @ExceptionHandler(BookNotFreeException.class)
+    public ResponseEntity<Map<String, Object>> bookNotFreeException(BookNotFreeException exc){
+        Map<String, Object> message = new HashMap<>();
+        message.put("error", "Livro não disponível");
+        message.put("status", 400);
+        message.put("message", exc.getMessage());
+        message.put("timestamp", System.currentTimeMillis());
+
+        return ResponseEntity.badRequest().body(message);
     }
 }

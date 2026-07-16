@@ -2,6 +2,7 @@ package com.joaogabriel.dev.biblioteca.service;
 
 import java.util.List;
 
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
@@ -65,6 +66,12 @@ public class BookService {
         repository.save(book);
 
         return toResponse(book);
+    }
+
+    @CacheEvict(value = "books", key = "#book.id")
+    public void updateStatus(Book book, BookStatus status){
+        book.setStatus(status);
+        repository.save(book);
     }
 
     private BookResponse toResponse(Book book){

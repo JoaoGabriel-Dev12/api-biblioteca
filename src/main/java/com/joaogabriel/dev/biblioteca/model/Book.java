@@ -9,6 +9,8 @@ import com.joaogabriel.dev.biblioteca.model.enums.BookStatus;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -28,6 +30,7 @@ public class Book implements Serializable{
     private String codigo;
     private String autor;
     private Integer anoLancamento;
+    @Enumerated(EnumType.STRING)
     private BookStatus status;
 
     @JsonIgnore
