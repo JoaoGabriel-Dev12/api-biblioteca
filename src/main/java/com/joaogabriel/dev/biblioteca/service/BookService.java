@@ -2,6 +2,7 @@ package com.joaogabriel.dev.biblioteca.service;
 
 import java.util.List;
 
+import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
@@ -45,6 +46,25 @@ public class BookService {
     public List<BookResponse> getAll(){
         return repository.findAll().stream()
             .map(this::toResponse).toList();
+    }
+
+    @CachePut(value = "books", key = "#id")
+    public BookResponse update(Long id, BookRequest dto){
+        if(fieldIsNull(dto) || id == null){
+            throw new IllegalArgumentException("Campos inválidos no corpo da requisição");
+        }
+
+        if (fieldIsBlank(dto)) {
+            throw new MethodArgumentNotValidException("Campos vazios no corpo da requisição");
+        }
+
+        BookResponse response = getById(id);
+        Book book = new Book(response.id(), response.titulo(), 
+        response.descricao(), response.codigo(), response.autor(), 
+        response.anoLancamento(), response.status());
+        repository.save(book);
+
+        return toResponse(book);
     }
 
     private BookResponse toResponse(Book book){
