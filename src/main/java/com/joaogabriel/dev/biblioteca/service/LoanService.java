@@ -2,6 +2,8 @@ package com.joaogabriel.dev.biblioteca.service;
 
 import java.time.OffsetDateTime;
 
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import com.joaogabriel.dev.biblioteca.dtos.BookRequest;
@@ -16,6 +18,9 @@ import com.joaogabriel.dev.biblioteca.model.enums.BookStatus;
 import com.joaogabriel.dev.biblioteca.model.enums.LoanStatus;
 import com.joaogabriel.dev.biblioteca.repository.LoanRepository;
 import com.joaogabriel.dev.biblioteca.service.global.BookNotFreeException;
+import com.joaogabriel.dev.biblioteca.service.global.ObjectNotFoundException;
+
+import jakarta.transaction.Transactional;
 
 @Service
 public class LoanService {
@@ -29,23 +34,16 @@ public class LoanService {
         this.bookService = bookService;
     }
 
+    @Transactional
     public LoanResponse loan(LoanRequest dto){
         if(fieldIsNull(dto)){
             throw new IllegalArgumentException("Campos inválidos no corpo da requisição");
         }
 
-        ClientResponse clientResponse = clientService.getById(dto.idClient());
-        BookResponse bookResponse = bookService.getById(dto.idBook());
+        Client client = clientService.findEntity(dto.idClient());
+        Book book = bookService.findEntity(dto.idBook());
         
-        if(bookNotFree(bookResponse.status())){throw new BookNotFreeException();}
-
-        Client client = new Client(clientResponse.id(), clientResponse.nome(), clientResponse.email(), 
-        clientResponse.telefone(), clientResponse.cpf(), clientResponse.endereco());
-        
-        Book book = new Book(bookResponse.id(), bookResponse.titulo(), 
-        bookResponse.descricao(), bookResponse.codigo(), bookResponse.autor(), 
-        bookResponse.anoLancamento(), bookResponse.status());
-        
+        if(bookNotFree(book.getStatus())){throw new BookNotFreeException();}
 
         bookService.updateStatus(book, BookStatus.EMPRESTADO);
 
@@ -54,6 +52,33 @@ public class LoanService {
         loan.setReturnBookDate(OffsetDateTime.now().plusDays(7));
 
         repository.save(loan);
+        return toResponse(loan);
+    }
+
+    @Transactional
+    @CacheEvict(value = "loans", key = "#id")
+    public void returnBook(Long id){
+        if (id == null) {
+            throw new IllegalArgumentException("Id deve ser válido");
+        }
+
+        LoanResponse loanResponse = getById(id);
+        Loan loan = new Loan(loanResponse.id(), loanResponse.client(), 
+        loanResponse.book(), loanResponse.status());
+        loan.setLoanDate(loanResponse.loanDate());
+        loan.setReturnBookDate(loanResponse.returnBookDate());
+
+        Book book = loan.getBook();
+
+        loan.setStatus(LoanStatus.RETURNED);
+        bookService.updateStatus(book, BookStatus.LIVRE);
+        repository.save(loan);
+
+    }
+
+    @Cacheable(value = "loans", key = "#id")
+    public LoanResponse getById(Long id){
+        Loan loan = repository.findById(id).orElseThrow(() -> new ObjectNotFoundException(id));
         return toResponse(loan);
     }
 

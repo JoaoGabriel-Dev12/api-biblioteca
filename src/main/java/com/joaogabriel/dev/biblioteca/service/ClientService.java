@@ -48,6 +48,10 @@ public class ClientService {
         return response;
     }
 
+    protected Client findEntity(Long id){
+        return repository.findById(id).orElseThrow(() -> new ObjectNotFoundException(id));
+    }
+
     public List<ClientResponse> getAll(){
         List<ClientResponse> listClients = repository.findAll()
             .stream().map(this::toResponse).toList();

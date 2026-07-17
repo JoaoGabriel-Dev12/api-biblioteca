@@ -74,6 +74,10 @@ public class BookService {
         repository.save(book);
     }
 
+    protected Book findEntity(Long id){
+        return repository.findById(id).orElseThrow(() -> new ObjectNotFoundException(id));
+    }
+
     private BookResponse toResponse(Book book){
         return new BookResponse(book.getId(), book.getTitulo(), book.getDescricao(), 
         book.getCodigo(), book.getAutor(), book.getAnoLancamento(), book.getStatus());
