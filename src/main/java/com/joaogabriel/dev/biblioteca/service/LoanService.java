@@ -6,9 +6,6 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
-import com.joaogabriel.dev.biblioteca.dtos.BookRequest;
-import com.joaogabriel.dev.biblioteca.dtos.BookResponse;
-import com.joaogabriel.dev.biblioteca.dtos.ClientResponse;
 import com.joaogabriel.dev.biblioteca.dtos.LoanRequest;
 import com.joaogabriel.dev.biblioteca.dtos.LoanResponse;
 import com.joaogabriel.dev.biblioteca.model.Book;
