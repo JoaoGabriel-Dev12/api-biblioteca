@@ -1,9 +1,9 @@
 package com.joaogabriel.dev.biblioteca.service;
 
-import java.util.List;
-
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.joaogabriel.dev.biblioteca.dtos.ClientRequest;
@@ -52,11 +52,9 @@ public class ClientService {
         return repository.findById(id).orElseThrow(() -> new ObjectNotFoundException(id));
     }
 
-    public List<ClientResponse> getAll(){
-        List<ClientResponse> listClients = repository.findAll()
-            .stream().map(this::toResponse).toList();
-        
-        return listClients;
+    public Page<ClientResponse> getAll(Pageable pageable){
+        return repository.findAll(pageable)
+            .map(this::toResponse);
     }
 
     @CachePut(value = "usuarios", key = "#id")

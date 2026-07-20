@@ -5,6 +5,8 @@ import java.util.List;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.joaogabriel.dev.biblioteca.dtos.BookRequest;
@@ -44,9 +46,8 @@ public class BookService {
         return toResponse(book);
     }
 
-    public List<BookResponse> getAll(){
-        return repository.findAll().stream()
-            .map(this::toResponse).toList();
+    public Page<BookResponse> getAll(Pageable pageable){
+        return repository.findAll(pageable).map(this::toResponse);
     }
 
     @CachePut(value = "books", key = "#id")

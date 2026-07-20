@@ -5,6 +5,8 @@ import java.util.List;
 
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.joaogabriel.dev.biblioteca.dtos.LoanRequest;
@@ -74,9 +76,8 @@ public class LoanService {
 
     }
 
-    public List<LoanResponse> getAll(){
-        return repository.findAll().stream()
-        .map(this::toResponse).toList();
+    public Page<LoanResponse> getAll(Pageable pageable){
+        return repository.findAll(pageable).map(this::toResponse);
     }
 
     public List<LoanResponse> getLoansByClient(Long idClient){

@@ -3,6 +3,7 @@ package com.joaogabriel.dev.biblioteca.controller;
 import java.net.URI;
 import java.util.List;
 
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -40,8 +41,8 @@ public class ClientController {
     }
 
     @GetMapping
-    public ResponseEntity<List<ClientResponse>> getAll(){
-        List<ClientResponse> listClients = service.getAll();
+    public ResponseEntity<List<ClientResponse>> getAll(Pageable pageable){
+        List<ClientResponse> listClients = service.getAll(pageable).getContent();
         return ResponseEntity.ok(listClients);
     }
 }
