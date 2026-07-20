@@ -1,6 +1,7 @@
 package com.joaogabriel.dev.biblioteca.service;
 
 import java.time.OffsetDateTime;
+import java.util.List;
 
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
@@ -71,6 +72,17 @@ public class LoanService {
         bookService.updateStatus(book, BookStatus.LIVRE);
         repository.save(loan);
 
+    }
+
+    public List<LoanResponse> getAll(){
+        return repository.findAll().stream()
+        .map(this::toResponse).toList();
+    }
+
+    public List<LoanResponse> getLoansByClient(Long idClient){
+        Client client = clientService.findEntity(idClient);
+        return repository.findByClient(client).stream()
+        .map(this::toResponse).toList();
     }
 
     @Cacheable(value = "loans", key = "#id")

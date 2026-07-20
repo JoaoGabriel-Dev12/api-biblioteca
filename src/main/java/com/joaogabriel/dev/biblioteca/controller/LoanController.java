@@ -1,8 +1,10 @@
 package com.joaogabriel.dev.biblioteca.controller;
 
 import java.net.URI;
+import java.util.List;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -37,5 +39,15 @@ public class LoanController {
     public ResponseEntity<Void> returnBook(@PathVariable Long id){
         service.returnBook(id);
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping
+    public ResponseEntity<List<LoanResponse>> getAll(){
+        return ResponseEntity.ok(service.getAll());
+    }
+
+    @GetMapping("/client/{id}")
+    public ResponseEntity<List<LoanResponse>> getByClientId(@PathVariable Long id){
+        return ResponseEntity.ok(service.getLoansByClient(id));
     }
 }
