@@ -11,6 +11,7 @@ public record LoanResponse(
     Client client, 
     Book book, 
     LoanStatus status,
+    boolean late,
     OffsetDateTime loanDate,
     OffsetDateTime returnBookDate
 ) {

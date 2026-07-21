@@ -43,6 +43,10 @@ public class Loan {
         this.status = status;
     }
 
+    public boolean isLate(){
+        return status == LoanStatus.ACTIVE && OffsetDateTime.now().isAfter(returnBookDate);
+    }
+
     public void setId(Long id) {
         this.id = id;
     }

@@ -94,7 +94,7 @@ public class LoanService {
 
     private LoanResponse toResponse(Loan loan){
         return new LoanResponse(loan.getId(), loan.getClient(), loan.getBook(), 
-        loan.getStatus(), loan.getLoanDate(), loan.getReturnBookDate());
+        loan.getStatus(), loan.isLate() ,loan.getLoanDate(), loan.getReturnBookDate());
     }
 
     private boolean fieldIsNull(LoanRequest dto){
