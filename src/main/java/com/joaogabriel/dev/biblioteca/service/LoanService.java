@@ -27,11 +27,13 @@ public class LoanService {
     private final LoanRepository repository;
     private final ClientService clientService;
     private final BookService bookService;
+    private final MailService mailService;
 
-    public LoanService(LoanRepository repository, ClientService clientService, BookService bookService){
+    public LoanService(LoanRepository repository, ClientService clientService, BookService bookService, MailService mailService){
         this.repository = repository;
         this.clientService = clientService;
         this.bookService = bookService;
+        this.mailService = mailService;
     }
 
     @Transactional
@@ -52,6 +54,7 @@ public class LoanService {
         loan.setReturnBookDate(OffsetDateTime.now().plusDays(7));
 
         repository.save(loan);
+        mailService.sendMailLoanBook(client.getEmail(), client.getNome(), book.getTitulo(), loan.getReturnBookDate());
         return toResponse(loan);
     }
 
@@ -63,7 +66,8 @@ public class LoanService {
         }
 
         LoanResponse loanResponse = getById(id);
-        Loan loan = new Loan(loanResponse.id(), loanResponse.client(), 
+        Client client = loanResponse.client();
+        Loan loan = new Loan(loanResponse.id(), client, 
         loanResponse.book(), loanResponse.status());
         loan.setLoanDate(loanResponse.loanDate());
         loan.setReturnBookDate(loanResponse.returnBookDate());
@@ -72,8 +76,8 @@ public class LoanService {
 
         loan.setStatus(LoanStatus.RETURNED);
         bookService.updateStatus(book, BookStatus.LIVRE);
+        mailService.sendMailLoanReturn(client.getEmail(), client.getNome(), book.getTitulo());
         repository.save(loan);
-
     }
 
     public Page<LoanResponse> getAll(Pageable pageable){
