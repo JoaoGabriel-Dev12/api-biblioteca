@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -45,5 +46,11 @@ public class BookController {
     public ResponseEntity<List<BookResponse>> getAll(Pageable pageable){
         List<BookResponse> listBooks = service.getAll(pageable).getContent();
         return ResponseEntity.ok(listBooks);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<BookResponse> update(@PathVariable Long id, @RequestBody BookRequest dto){
+        BookResponse response = service.update(id, dto);
+        return ResponseEntity.ok(response);
     }
 }

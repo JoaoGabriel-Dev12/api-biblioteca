@@ -1,7 +1,5 @@
 package com.joaogabriel.dev.biblioteca.service;
 
-import java.util.List;
-
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
@@ -61,9 +59,9 @@ public class BookService {
         }
 
         BookResponse response = getById(id);
-        Book book = new Book(response.id(), response.titulo(), 
-        response.descricao(), response.codigo(), response.autor(), 
-        response.anoLancamento(), response.status());
+        Book book = new Book(response.id(), dto.titulo(), 
+        dto.descricao(), dto.codigo(), dto.autor(), 
+        dto.anoLancamento(), response.status());
         repository.save(book);
 
         return toResponse(book);
