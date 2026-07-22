@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import com.joaogabriel.dev.biblioteca.service.global.BookNotFreeException;
-import com.joaogabriel.dev.biblioteca.service.global.MethodArgumentNotValidException;
+import com.joaogabriel.dev.biblioteca.service.global.EmptyFieldException;
 import com.joaogabriel.dev.biblioteca.service.global.ObjectNotFoundException;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -27,8 +27,8 @@ public class GlobalExceptions {
         return ResponseEntity.badRequest().body(message);
     }
 
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<Map<String, Object>> nullArgumentsException(MethodArgumentNotValidException exc){
+    @ExceptionHandler(EmptyFieldException.class)
+    public ResponseEntity<Map<String, Object>> nullArgumentsException(EmptyFieldException exc){
         Map<String, Object> message = new HashMap<>();
         message.put("error", "Campos vazios");
         message.put("status", 422);
@@ -52,6 +52,17 @@ public class GlobalExceptions {
 
     @ExceptionHandler(BookNotFreeException.class)
     public ResponseEntity<Map<String, Object>> bookNotFreeException(BookNotFreeException exc){
+        Map<String, Object> message = new HashMap<>();
+        message.put("error", "Livro não disponível");
+        message.put("status", 400);
+        message.put("message", exc.getMessage());
+        message.put("timestamp", System.currentTimeMillis());
+
+        return ResponseEntity.badRequest().body(message);
+    }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<Map<String, Object>> unexpectedErrorException(Exception exc){
         Map<String, Object> message = new HashMap<>();
         message.put("error", "Livro não disponível");
         message.put("status", 400);

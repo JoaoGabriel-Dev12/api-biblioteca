@@ -12,7 +12,7 @@ import com.joaogabriel.dev.biblioteca.dtos.BookResponse;
 import com.joaogabriel.dev.biblioteca.model.Book;
 import com.joaogabriel.dev.biblioteca.model.enums.BookStatus;
 import com.joaogabriel.dev.biblioteca.repository.BookRepository;
-import com.joaogabriel.dev.biblioteca.service.global.MethodArgumentNotValidException;
+import com.joaogabriel.dev.biblioteca.service.global.EmptyFieldException;
 import com.joaogabriel.dev.biblioteca.service.global.ObjectNotFoundException;
 
 @Service
@@ -29,7 +29,7 @@ public class BookService {
         }
 
         if (fieldIsBlank(dto)) {
-            throw new MethodArgumentNotValidException("Campos vazios no corpo da requisição");
+            throw new EmptyFieldException("Campos vazios no corpo da requisição");
         }
 
         Book book = repository.save(new Book(null, dto.titulo(), dto.descricao(), dto.codigo(),
@@ -55,7 +55,7 @@ public class BookService {
         }
 
         if (fieldIsBlank(dto)) {
-            throw new MethodArgumentNotValidException("Campos vazios no corpo da requisição");
+            throw new EmptyFieldException("Campos vazios no corpo da requisição");
         }
 
         BookResponse response = getById(id);
@@ -77,7 +77,7 @@ public class BookService {
         return repository.findById(id).orElseThrow(() -> new ObjectNotFoundException(id));
     }
 
-    private BookResponse toResponse(Book book){
+    protected BookResponse toResponse(Book book){
         return new BookResponse(book.getId(), book.getTitulo(), book.getDescricao(), 
         book.getCodigo(), book.getAutor(), book.getAnoLancamento(), book.getStatus());
     }

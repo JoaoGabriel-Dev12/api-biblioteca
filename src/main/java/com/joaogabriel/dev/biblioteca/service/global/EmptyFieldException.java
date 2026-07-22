@@ -1,9 +1,9 @@
 package com.joaogabriel.dev.biblioteca.service.global;
 
-public class MethodArgumentNotValidException extends RuntimeException{
+public class EmptyFieldException extends RuntimeException{
     private String messageError;
 
-    public MethodArgumentNotValidException(String messageError) {
+    public EmptyFieldException(String messageError) {
         this.messageError = messageError;
     }
 

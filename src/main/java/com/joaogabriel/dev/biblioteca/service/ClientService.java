@@ -10,7 +10,7 @@ import com.joaogabriel.dev.biblioteca.dtos.ClientRequest;
 import com.joaogabriel.dev.biblioteca.dtos.ClientResponse;
 import com.joaogabriel.dev.biblioteca.model.Client;
 import com.joaogabriel.dev.biblioteca.repository.ClientRepository;
-import com.joaogabriel.dev.biblioteca.service.global.MethodArgumentNotValidException;
+import com.joaogabriel.dev.biblioteca.service.global.EmptyFieldException;
 import com.joaogabriel.dev.biblioteca.service.global.ObjectNotFoundException;
 
 @Service
@@ -30,7 +30,7 @@ public class ClientService {
         }
 
         if (fieldIsEmpty(dto)) {
-            throw new MethodArgumentNotValidException("Campos vazios no corpo da requisição");
+            throw new EmptyFieldException("Campos vazios no corpo da requisição");
         }
         
         Client client = repository.save(new Client(null, dto.nome(), dto.email(), dto.telefone(), dto.cpf(), dto.endereco()));
@@ -64,7 +64,7 @@ public class ClientService {
         }
 
         if (fieldIsEmpty(dto)) {
-            throw new MethodArgumentNotValidException("Campos vazios no corpo da requisição");
+            throw new EmptyFieldException("Campos vazios no corpo da requisição");
         }
 
         ClientResponse response = getById(id);
@@ -75,13 +75,12 @@ public class ClientService {
         return toResponse(client);
     }
 
-    private ClientResponse toResponse(Client client){
+    protected ClientResponse toResponse(Client client){
         return new ClientResponse(
             client.getId(),
             client.getNome(),
             client.getEmail(),
             client.getTelefone(),
-            client.getCpf(),
             client.getEndereço()
         );
     }

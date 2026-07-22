@@ -9,6 +9,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import com.joaogabriel.dev.biblioteca.dtos.BookResponse;
+import com.joaogabriel.dev.biblioteca.dtos.ClientResponse;
 import com.joaogabriel.dev.biblioteca.dtos.LoanRequest;
 import com.joaogabriel.dev.biblioteca.dtos.LoanResponse;
 import com.joaogabriel.dev.biblioteca.model.Book;
@@ -65,13 +67,8 @@ public class LoanService {
             throw new IllegalArgumentException("Id deve ser válido");
         }
 
-        LoanResponse loanResponse = getById(id);
-        Client client = loanResponse.client();
-        Loan loan = new Loan(loanResponse.id(), client, 
-        loanResponse.book(), loanResponse.status());
-        loan.setLoanDate(loanResponse.loanDate());
-        loan.setReturnBookDate(loanResponse.returnBookDate());
-
+        Loan loan = repository.findById(id).orElseThrow(() -> new ObjectNotFoundException(id));
+        Client client = loan.getClient();
         Book book = loan.getBook();
 
         loan.setStatus(LoanStatus.RETURNED);
@@ -97,7 +94,7 @@ public class LoanService {
     }
 
     private LoanResponse toResponse(Loan loan){
-        return new LoanResponse(loan.getId(), loan.getClient(), loan.getBook(), 
+        return new LoanResponse(loan.getId(), clientService.toResponse(loan.getClient()), bookService.toResponse(loan.getBook()), 
         loan.getStatus(), loan.isLate() ,loan.getLoanDate(), loan.getReturnBookDate());
     }
 
