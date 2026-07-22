@@ -9,8 +9,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import com.joaogabriel.dev.biblioteca.dtos.BookResponse;
-import com.joaogabriel.dev.biblioteca.dtos.ClientResponse;
 import com.joaogabriel.dev.biblioteca.dtos.LoanRequest;
 import com.joaogabriel.dev.biblioteca.dtos.LoanResponse;
 import com.joaogabriel.dev.biblioteca.model.Book;
@@ -85,6 +83,11 @@ public class LoanService {
         Client client = clientService.findEntity(idClient);
         return repository.findByClient(client).stream()
         .map(this::toResponse).toList();
+    }
+
+    @CacheEvict(value = "loans", key = "#id")
+    public void deleteById(Long id){
+        repository.deleteById(id);
     }
 
     @Cacheable(value = "loans", key = "#id")

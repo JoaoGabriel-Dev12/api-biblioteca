@@ -1,5 +1,6 @@
 package com.joaogabriel.dev.biblioteca.service;
 
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
@@ -73,6 +74,11 @@ public class ClientService {
         repository.save(client);
 
         return toResponse(client);
+    }
+
+    @CacheEvict(value = "usuarios", key = "#id")
+    public void deleteById(Long id){
+        repository.deleteById(id);
     }
 
     protected ClientResponse toResponse(Client client){

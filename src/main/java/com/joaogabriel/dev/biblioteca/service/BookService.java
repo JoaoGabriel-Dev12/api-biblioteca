@@ -73,6 +73,11 @@ public class BookService {
         repository.save(book);
     }
 
+    @CacheEvict(value = "books", key = "#id")
+    public void deleteById(Long id){
+        repository.deleteById(id);
+    }
+
     protected Book findEntity(Long id){
         return repository.findById(id).orElseThrow(() -> new ObjectNotFoundException(id));
     }

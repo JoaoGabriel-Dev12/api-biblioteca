@@ -3,6 +3,8 @@ package com.joaogabriel.dev.biblioteca.controller.exception;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -15,6 +17,8 @@ import jakarta.servlet.http.HttpServletRequest;
 
 @ControllerAdvice
 public class GlobalExceptions {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(GlobalExceptions.class);
 
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<Map<String, Object>> nullArgumentsException(IllegalArgumentException exc){
@@ -63,12 +67,14 @@ public class GlobalExceptions {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Map<String, Object>> unexpectedErrorException(Exception exc){
+        LOGGER.error("error: ", exc);
+
         Map<String, Object> message = new HashMap<>();
-        message.put("error", "Livro não disponível");
-        message.put("status", 400);
+        message.put("error", "Erro interno inesperado");
+        message.put("status", 500);
         message.put("message", exc.getMessage());
         message.put("timestamp", System.currentTimeMillis());
 
-        return ResponseEntity.badRequest().body(message);
+        return ResponseEntity.status(500).body(message);
     }
 }
