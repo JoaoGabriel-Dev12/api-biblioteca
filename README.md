@@ -20,6 +20,10 @@ Ferramentas utilizadas:
 ## Como rodar o projeto
 ### Requisitos
 Java, Postgres e Redis instalados na máquina local
+### Clone o repositório
+```bash
+git clone https://github.com/JoaoGabriel-Dev12/api-biblioteca.git
+```
 ### Configurar as variáveis de ambiente
 Crie um arquivo .env na pasta raiz do projeto, e insira as seguintes variáveis
 ```bash
