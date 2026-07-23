@@ -33,18 +33,6 @@ DATABASE_PASSWORD=<sua-senha>
 MAIL_USERNAME=<seu-email>
 MAIL_PASSWORD=<sua-senha-de-app>
 ```
-No application.properties importe o .env e configure as variáveis
-```bash
-# Importar .env
-spring.config.import=optional:file:.env[.properties]
-
-# Configurar variáveis
-spring.datasource.username=${DATABASE_USER}
-spring.datasource.password=${DATABASE_PASSWORD}
-
-spring.mail.username=${MAIL_USERNAME}
-spring.mail.password=${MAIL_PASSWORD}
-```
 ### Rodar o projeto localmente
 No terminal digite
 ```bash
