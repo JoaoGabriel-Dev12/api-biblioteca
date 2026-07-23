@@ -1,5 +1,7 @@
 package com.joaogabriel.dev.biblioteca.service;
 
+import java.util.Optional;
+
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
@@ -73,6 +75,14 @@ public class ClientService {
         dto.telefone(), dto.cpf(), dto.endereco());
         repository.save(client);
 
+        return toResponse(client);
+    }
+
+    @Cacheable(value = "usuarios", key = "#cpf")
+    public ClientResponse getByCpf(String cpf){
+        Client client = repository.findByCpf(cpf).orElseThrow(() -> new ObjectNotFoundException(
+            "Cliente com CPF: " +cpf+ " não foi encontrado"
+        ));
         return toResponse(client);
     }
 

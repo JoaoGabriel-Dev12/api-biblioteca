@@ -59,4 +59,10 @@ public class ClientController {
         service.deleteById(id);
         return ResponseEntity.status(204).build();
     }
+
+    @GetMapping("/client/{cpf}")
+    public ResponseEntity<ClientResponse> getByCpf(@PathVariable String cpf){
+        ClientResponse response = service.getByCpf(cpf);
+        return ResponseEntity.ok(response);
+    }
 }
