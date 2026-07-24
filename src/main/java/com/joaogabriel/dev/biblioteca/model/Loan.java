@@ -32,7 +32,7 @@ public class Loan {
     @JoinColumn(name = "book_id")
     private Book book;
     private OffsetDateTime loanDate;
-    private OffsetDateTime returnBookDate;
+    private OffsetDateTime dueDate;
 
     public Loan(){}
 
@@ -44,7 +44,7 @@ public class Loan {
     }
 
     public boolean isLate(){
-        return status == LoanStatus.ACTIVE && OffsetDateTime.now().isAfter(returnBookDate);
+        return status == LoanStatus.ACTIVE && OffsetDateTime.now().isAfter(dueDate);
     }
 
     public void setId(Long id) {
@@ -87,12 +87,12 @@ public class Loan {
         return loanDate;
     }
 
-    public void setReturnBookDate(OffsetDateTime returnBookDate) {
-        this.returnBookDate = returnBookDate;
+    public void setDueDate(OffsetDateTime returnBookDate) {
+        this.dueDate = returnBookDate;
     }
 
-    public OffsetDateTime getReturnBookDate() {
-        return returnBookDate;
+    public OffsetDateTime getDueDate() {
+        return dueDate;
     }
 
     @Override

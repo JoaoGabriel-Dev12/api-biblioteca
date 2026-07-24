@@ -51,10 +51,10 @@ public class LoanService {
 
         Loan loan = new Loan(null, client, book, LoanStatus.ACTIVE);
         loan.setLoanDate(OffsetDateTime.now());
-        loan.setReturnBookDate(OffsetDateTime.now().plusDays(7));
+        loan.setDueDate(OffsetDateTime.now().plusDays(7));
 
         repository.save(loan);
-        mailService.sendMailLoanBook(client.getEmail(), client.getNome(), book.getTitulo(), loan.getReturnBookDate());
+        mailService.sendMailLoanBook(client.getEmail(), client.getNome(), book.getTitulo(), loan.getDueDate());
         return toResponse(loan);
     }
 
@@ -98,7 +98,7 @@ public class LoanService {
 
     private LoanResponse toResponse(Loan loan){
         return new LoanResponse(loan.getId(), clientService.toResponse(loan.getClient()), bookService.toResponse(loan.getBook()), 
-        loan.getStatus(), loan.isLate() ,loan.getLoanDate(), loan.getReturnBookDate());
+        loan.getStatus(), loan.isLate() ,loan.getLoanDate(), loan.getDueDate());
     }
 
     private boolean fieldIsNull(LoanRequest dto){

@@ -1,7 +1,5 @@
 package com.joaogabriel.dev.biblioteca.service;
 
-import java.util.Optional;
-
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
@@ -97,7 +95,7 @@ public class ClientService {
             client.getNome(),
             client.getEmail(),
             client.getTelefone(),
-            client.getEndereço()
+            client.getEndereco()
         );
     }
 

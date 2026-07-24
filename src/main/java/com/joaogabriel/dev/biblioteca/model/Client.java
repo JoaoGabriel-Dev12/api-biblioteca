@@ -25,7 +25,7 @@ public class Client implements Serializable{
     private String email;
     private String telefone;
     private String cpf;
-    private String endereço;
+    private String endereco;
 
     @JsonIgnore
     @OneToMany(mappedBy = "client")
@@ -40,7 +40,7 @@ public class Client implements Serializable{
         this.email = email;
         this.telefone = telefone;
         this.cpf = cpf;
-        this.endereço = endereco;
+        this.endereco = endereco;
     }
 
     public Long getId() {
@@ -83,12 +83,12 @@ public class Client implements Serializable{
         this.cpf = cpf;
     }
 
-    public String getEndereço() {
-        return endereço;
+    public String getEndereco() {
+        return endereco;
     }
 
-    public void setEndereço(String endereço) {
-        this.endereço = endereço;
+    public void setEndereco(String endereço) {
+        this.endereco = endereço;
     }
 
     public List<Loan> getLoans() {
