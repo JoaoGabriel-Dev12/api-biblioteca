@@ -16,6 +16,7 @@ Ferramentas utilizadas:
 - Redis
 - Swagger
 - Spring Mail
+- Flyway
 
 ## Como rodar o projeto
 ### Requisitos
@@ -48,4 +49,4 @@ tratamento de exceções, cache e integração com serviços externos.
 ## Próximos passos
 - [ ] Validação com Bean Validation
 - [ ] Autenticação com Spring Security
-- [ ] Migrações de banco com Flyway
+- [x] Migrações de banco com Flyway
