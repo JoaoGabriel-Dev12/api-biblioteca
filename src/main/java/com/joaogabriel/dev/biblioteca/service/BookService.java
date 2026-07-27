@@ -24,14 +24,6 @@ public class BookService {
     }
 
     public BookResponse save(BookRequest dto){
-        if(fieldIsNull(dto)){
-            throw new IllegalArgumentException("Campos inválidos no corpo da requisição");
-        }
-
-        if (fieldIsBlank(dto)) {
-            throw new EmptyFieldException("Campos vazios no corpo da requisição");
-        }
-
         Book book = repository.save(new Book(null, dto.titulo(), dto.descricao(), dto.codigo(),
                 dto.autor(), dto.anoLancamento(), BookStatus.LIVRE));
         
@@ -50,14 +42,6 @@ public class BookService {
 
     @CachePut(value = "books", key = "#id")
     public BookResponse update(Long id, BookRequest dto){
-        if(fieldIsNull(dto) || id == null){
-            throw new IllegalArgumentException("Campos inválidos no corpo da requisição");
-        }
-
-        if (fieldIsBlank(dto)) {
-            throw new EmptyFieldException("Campos vazios no corpo da requisição");
-        }
-
         BookResponse response = getById(id);
         Book book = new Book(response.id(), dto.titulo(), 
         dto.descricao(), dto.codigo(), dto.autor(), 
@@ -85,15 +69,5 @@ public class BookService {
     protected BookResponse toResponse(Book book){
         return new BookResponse(book.getId(), book.getTitulo(), book.getDescricao(), 
         book.getCodigo(), book.getAutor(), book.getAnoLancamento(), book.getStatus());
-    }
-
-    private boolean fieldIsNull(BookRequest dto){
-        return dto.titulo() == null || dto.descricao() == null || dto.codigo() == null 
-        || dto.autor() == null || dto.anoLancamento() == null;
-    }
-
-    private boolean fieldIsBlank(BookRequest dto){
-        return dto.titulo().isBlank() || dto.descricao().isBlank() || dto.codigo().isBlank() 
-        || dto.autor().isBlank();
     }
 }

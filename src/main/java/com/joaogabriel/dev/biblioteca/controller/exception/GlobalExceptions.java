@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import com.joaogabriel.dev.biblioteca.service.global.BookNotFreeException;
-import com.joaogabriel.dev.biblioteca.service.global.EmptyFieldException;
 import com.joaogabriel.dev.biblioteca.service.global.ObjectNotFoundException;
 
 import jakarta.servlet.http.HttpServletRequest;

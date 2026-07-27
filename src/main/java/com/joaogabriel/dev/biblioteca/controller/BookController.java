@@ -19,6 +19,8 @@ import com.joaogabriel.dev.biblioteca.dtos.BookRequest;
 import com.joaogabriel.dev.biblioteca.dtos.BookResponse;
 import com.joaogabriel.dev.biblioteca.service.BookService;
 
+import jakarta.validation.Valid;
+
 @RestController
 @RequestMapping("/books")
 public class BookController {
@@ -29,7 +31,7 @@ public class BookController {
     }
 
     @PostMapping
-    public ResponseEntity<BookResponse> save(@RequestBody BookRequest dto){
+    public ResponseEntity<BookResponse> save(@Valid @RequestBody BookRequest dto){
         BookResponse response = service.save(dto);
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
             .buildAndExpand(response.id()).toUri();
@@ -50,7 +52,7 @@ public class BookController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<BookResponse> update(@PathVariable Long id, @RequestBody BookRequest dto){
+    public ResponseEntity<BookResponse> update(@PathVariable Long id, @Valid @RequestBody BookRequest dto){
         BookResponse response = service.update(id, dto);
         return ResponseEntity.ok(response);
     }
