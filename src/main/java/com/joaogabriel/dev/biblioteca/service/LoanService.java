@@ -38,10 +38,6 @@ public class LoanService {
 
     @Transactional
     public LoanResponse loan(LoanRequest dto){
-        if(fieldIsNull(dto)){
-            throw new IllegalArgumentException("Campos inválidos no corpo da requisição");
-        }
-
         Client client = clientService.findEntity(dto.idClient());
         Book book = bookService.findEntity(dto.idBook());
         
@@ -99,10 +95,6 @@ public class LoanService {
     private LoanResponse toResponse(Loan loan){
         return new LoanResponse(loan.getId(), clientService.toResponse(loan.getClient()), bookService.toResponse(loan.getBook()), 
         loan.getStatus(), loan.isLate() ,loan.getLoanDate(), loan.getDueDate());
-    }
-
-    private boolean fieldIsNull(LoanRequest dto){
-        return dto.idClient() == null || dto.idBook() == null;
     }
 
     private boolean bookNotFree(BookStatus status){

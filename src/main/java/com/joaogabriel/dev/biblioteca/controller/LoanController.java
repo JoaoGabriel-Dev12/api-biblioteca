@@ -19,6 +19,8 @@ import com.joaogabriel.dev.biblioteca.dtos.LoanRequest;
 import com.joaogabriel.dev.biblioteca.dtos.LoanResponse;
 import com.joaogabriel.dev.biblioteca.service.LoanService;
 
+import jakarta.validation.Valid;
+
 @RestController
 @RequestMapping("/loans")
 public class LoanController {
@@ -29,7 +31,7 @@ public class LoanController {
     }
 
     @PostMapping
-    public ResponseEntity<LoanResponse> loan(@RequestBody LoanRequest dto){
+    public ResponseEntity<LoanResponse> loan(@Valid @RequestBody LoanRequest dto){
         LoanResponse response = service.loan(dto);
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
         .buildAndExpand(response.id()).toUri();
