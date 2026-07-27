@@ -47,6 +47,6 @@ Com este link é possível testar os endpoints
 Projeto pessoal de estudo, desenvolvido para praticar framework Spring Boot, arquitetura em camadas,
 tratamento de exceções, cache e integração com serviços externos.
 ## Próximos passos
-- [ ] Validação com Bean Validation
+- [x] Validação com Bean Validation
 - [ ] Autenticação com Spring Security
 - [x] Migrações de banco com Flyway
