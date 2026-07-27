@@ -11,7 +11,6 @@ import com.joaogabriel.dev.biblioteca.dtos.ClientRequest;
 import com.joaogabriel.dev.biblioteca.dtos.ClientResponse;
 import com.joaogabriel.dev.biblioteca.model.Client;
 import com.joaogabriel.dev.biblioteca.repository.ClientRepository;
-import com.joaogabriel.dev.biblioteca.service.global.EmptyFieldException;
 import com.joaogabriel.dev.biblioteca.service.global.ObjectNotFoundException;
 
 @Service

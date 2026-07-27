@@ -12,7 +12,6 @@ import com.joaogabriel.dev.biblioteca.dtos.BookResponse;
 import com.joaogabriel.dev.biblioteca.model.Book;
 import com.joaogabriel.dev.biblioteca.model.enums.BookStatus;
 import com.joaogabriel.dev.biblioteca.repository.BookRepository;
-import com.joaogabriel.dev.biblioteca.service.global.EmptyFieldException;
 import com.joaogabriel.dev.biblioteca.service.global.ObjectNotFoundException;
 
 @Service
