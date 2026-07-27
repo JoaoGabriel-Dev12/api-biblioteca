@@ -19,6 +19,8 @@ import com.joaogabriel.dev.biblioteca.dtos.ClientRequest;
 import com.joaogabriel.dev.biblioteca.dtos.ClientResponse;
 import com.joaogabriel.dev.biblioteca.service.ClientService;
 
+import jakarta.validation.Valid;
+
 @RestController
 @RequestMapping("/clients")
 public class ClientController {
@@ -29,7 +31,7 @@ public class ClientController {
     }
 
     @PostMapping
-    public ResponseEntity<ClientResponse> save(@RequestBody ClientRequest dto){
+    public ResponseEntity<ClientResponse> save(@Valid @RequestBody ClientRequest dto){
         ClientResponse response = service.save(dto);
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
             .buildAndExpand(response.id()).toUri();
@@ -49,7 +51,7 @@ public class ClientController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ClientResponse> update(@PathVariable Long id, @RequestBody ClientRequest dto){
+    public ResponseEntity<ClientResponse> update(@PathVariable Long id, @Valid @RequestBody ClientRequest dto){
         ClientResponse response = service.update(id, dto);
         return ResponseEntity.ok(response);
     }

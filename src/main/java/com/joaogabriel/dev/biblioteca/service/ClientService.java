@@ -26,14 +26,6 @@ public class ClientService {
     }
 
     public ClientResponse save(ClientRequest dto){
-        if(fieldIsNull(dto)){
-            throw new IllegalArgumentException("Campos inválidos no corpo da requisição");
-        }
-
-        if (fieldIsEmpty(dto)) {
-            throw new EmptyFieldException("Campos vazios no corpo da requisição");
-        }
-        
         Client client = repository.save(new Client(null, dto.nome(), dto.email(), dto.telefone(), dto.cpf(), dto.endereco()));
         ClientResponse response = toResponse(client);
         mailService.sendMailCreateAccount(response.email(), response.nome());
@@ -60,14 +52,6 @@ public class ClientService {
 
     @CachePut(value = "usuarios", key = "#id")
     public ClientResponse update(Long id, ClientRequest dto){
-        if(fieldIsNull(dto) || id == null){
-            throw new IllegalArgumentException("Campos inválidos no corpo da requisição");
-        }
-
-        if (fieldIsEmpty(dto)) {
-            throw new EmptyFieldException("Campos vazios no corpo da requisição");
-        }
-
         ClientResponse response = getById(id);
         Client client = new Client(response.id(), dto.nome(), dto.email(), 
         dto.telefone(), dto.cpf(), dto.endereco());
@@ -97,15 +81,5 @@ public class ClientService {
             client.getTelefone(),
             client.getEndereco()
         );
-    }
-
-    private boolean fieldIsNull(ClientRequest dto){
-        return dto.nome() == null || dto.email() == null || dto.telefone() == null || dto.cpf() == null
-        || dto.endereco() == null;
-    }
-
-    private boolean fieldIsEmpty(ClientRequest dto){
-        return dto.nome().isEmpty() || dto.email().isEmpty() || dto.telefone().isEmpty()
-        || dto.cpf().isEmpty() || dto.endereco().isEmpty();
     }
 }

@@ -6,6 +6,7 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
@@ -31,12 +32,12 @@ public class GlobalExceptions {
         return ResponseEntity.badRequest().body(message);
     }
 
-    @ExceptionHandler(EmptyFieldException.class)
-    public ResponseEntity<Map<String, Object>> nullArgumentsException(EmptyFieldException exc){
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<Map<String, Object>> nullArgumentsException(MethodArgumentNotValidException exc){
         Map<String, Object> message = new HashMap<>();
         message.put("error", "Campos vazios");
         message.put("status", 422);
-        message.put("message", exc.getMessageError());
+        message.put("message", exc.getMessage());
         message.put("timestamp", System.currentTimeMillis());
 
         return ResponseEntity.unprocessableContent().body(message);
