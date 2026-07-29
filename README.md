@@ -17,6 +17,8 @@ Ferramentas utilizadas:
 - Swagger
 - Spring Mail
 - Flyway
+- Bean Validation
+- Spring Security
 
 ## Como rodar o projeto
 ### Requisitos
@@ -48,5 +50,5 @@ Projeto pessoal de estudo, desenvolvido para praticar framework Spring Boot, arq
 tratamento de exceções, cache e integração com serviços externos.
 ## Próximos passos
 - [x] Validação com Bean Validation
-- [ ] Autenticação com Spring Security
+- [x] Autenticação com Spring Security
 - [x] Migrações de banco com Flyway
