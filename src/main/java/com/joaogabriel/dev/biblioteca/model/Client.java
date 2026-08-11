@@ -29,7 +29,7 @@ public class Client implements Serializable{
 
     @JsonIgnore
     @OneToMany(mappedBy = "client")
-    private List<Loan> loans = new ArrayList<>(); 
+    private List<Loan> loans = new ArrayList<>();
 
     public Client(){
     }
