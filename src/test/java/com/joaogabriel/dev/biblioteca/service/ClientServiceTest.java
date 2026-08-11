@@ -1,0 +1,42 @@
+package com.joaogabriel.dev.biblioteca.service;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+
+import com.joaogabriel.dev.biblioteca.dtos.ClientRequest;
+import com.joaogabriel.dev.biblioteca.dtos.ClientResponse;
+import com.joaogabriel.dev.biblioteca.model.Client;
+import com.joaogabriel.dev.biblioteca.repository.ClientRepository;
+
+import static org.mockito.Mockito.when;
+import static org.mockito.ArgumentMatchers.any;
+
+@ExtendWith(MockitoExtension.class)
+class ClientServiceTest {
+
+    @Mock
+    ClientRepository clientRepository;
+
+    @Mock
+    MailService mailService;
+
+    @InjectMocks
+    ClientService clientService;
+
+    @Test
+    public void insert_user_return_user(){
+        ClientRequest request = new ClientRequest("test", "test@email", "9087645324", "82329279094", "¨Tatakae, Eren");
+
+        Client clientSave = new Client(1L, request.nome(), request.email(),
+            request.telefone(), request.cpf(), request.endereco());
+        when(clientRepository.save(any(Client.class))).thenReturn(clientSave);
+        ClientResponse response = clientService.save(request);
+
+        assertEquals(request.nome(), response.nome());
+    }
+}
