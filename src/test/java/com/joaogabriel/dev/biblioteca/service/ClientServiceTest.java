@@ -7,6 +7,11 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 
 import com.joaogabriel.dev.biblioteca.dtos.ClientRequest;
 import com.joaogabriel.dev.biblioteca.dtos.ClientResponse;
@@ -15,6 +20,8 @@ import com.joaogabriel.dev.biblioteca.repository.ClientRepository;
 
 import static org.mockito.Mockito.when;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -53,5 +60,23 @@ class ClientServiceTest {
 
        assertEquals(client.getId(), response.id());
        assertEquals(client.getEmail(), response.email());
+    }
+
+    @Test
+    public void findAll_return_list_clients(){
+        Client client = new Client(1L, "teste", "teste@email.com",
+            "9087645324", "82329279094", "Rua 11, Bairro Centro");
+
+        List<Client> list = new ArrayList<>();
+        list.add(client);
+
+        Pageable pageable = PageRequest.of(0, 1);
+        Page<Client> page = new PageImpl<>(list, pageable, list.size());
+
+        when(clientRepository.findAll(pageable)).thenReturn(page);
+
+        List<ClientResponse> result = clientService.getAll(pageable).getContent();
+
+        assertEquals(list.size(), result.size());
     }
 }
