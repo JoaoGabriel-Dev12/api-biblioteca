@@ -17,6 +17,9 @@ import com.joaogabriel.dev.biblioteca.dtos.ClientResponse;
 import com.joaogabriel.dev.biblioteca.model.Client;
 import com.joaogabriel.dev.biblioteca.repository.ClientRepository;
 
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
@@ -92,5 +95,15 @@ class ClientServiceTest {
 
         assertEquals(clientExits.getId(), clientResponseUpdate.id());
         assertEquals(request.email(), clientResponseUpdate.email());
+    }
+
+    @Test
+    public void removeClientById_success(){
+        long clientId = 1L;
+
+        doNothing().when(clientRepository).deleteById(clientId);
+        clientService.deleteById(clientId);
+
+        verify(clientRepository).deleteById(clientId);
     }
 }
