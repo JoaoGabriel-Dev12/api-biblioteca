@@ -11,7 +11,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.web.PageableDefault;
 
 import com.joaogabriel.dev.biblioteca.dtos.ClientRequest;
 import com.joaogabriel.dev.biblioteca.dtos.ClientResponse;
@@ -78,5 +77,20 @@ class ClientServiceTest {
         List<ClientResponse> result = clientService.getAll(pageable).getContent();
 
         assertEquals(list.size(), result.size());
+    }
+
+    @Test
+    public void updateClient_return_client_updated(){
+        ClientRequest request = new ClientRequest("test", "test@email", "9087645324", "82329279094", "¨Tatakae, Eren");
+        Client clientExits = new Client(1L, "lastNome", "lastEmail",
+            "90874367123", "58659798090", "lastEndereco");
+
+        when(clientRepository.findById(1L)).thenReturn(Optional.of(clientExits));
+        when(clientRepository.save(any(Client.class))).thenAnswer(invocation -> invocation.getArgument(0));
+
+        ClientResponse clientResponseUpdate = clientService.update(1L, request);
+
+        assertEquals(clientExits.getId(), clientResponseUpdate.id());
+        assertEquals(request.email(), clientResponseUpdate.email());
     }
 }
