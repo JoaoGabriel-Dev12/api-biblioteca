@@ -18,7 +18,6 @@ import com.joaogabriel.dev.biblioteca.model.Client;
 import com.joaogabriel.dev.biblioteca.repository.ClientRepository;
 
 import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -62,6 +61,19 @@ class ClientServiceTest {
 
        assertEquals(client.getId(), response.id());
        assertEquals(client.getEmail(), response.email());
+    }
+
+    @Test
+    public void findByCpf_return_client(){
+        Client client = new Client(1L, "teste", "teste@email.com",
+            "9087645324", "82329279094", "Rua 11, Bairro Centro");
+
+        when(clientRepository.findByCpf("82329279094")).thenReturn(Optional.of(client));
+
+        ClientResponse response = clientService.getByCpf("82329279094");
+
+        assertEquals(client.getId(), response.id());
+        assertEquals(client.getEmail(), response.email());
     }
 
     @Test
