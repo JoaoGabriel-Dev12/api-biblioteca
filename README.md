@@ -19,6 +19,8 @@ Ferramentas utilizadas:
 - Flyway
 - Bean Validation
 - Spring Security
+- JUnit
+- Mockito
 
 ## Como rodar o projeto
 ### Requisitos
