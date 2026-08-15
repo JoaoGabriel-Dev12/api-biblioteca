@@ -2,6 +2,8 @@ package com.joaogabriel.dev.biblioteca.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
@@ -106,5 +108,17 @@ class BookServiceTest {
         assertEquals(request.codigo(), response.codigo());
         assertEquals(request.autor(), response.autor());
         assertEquals(request.anoLancamento(), response.anoLancamento());
+    }
+
+    @Test
+    public void updateStatus_of_book(){
+        Book bookExist = new Book(1L, "teste", "leia o livro",
+            "473847GUm", "Cristiano Ronaldo", 2012, BookStatus.LIVRE);
+        BookStatus newStatus = BookStatus.EMPRESTADO;
+
+        bookService.updateStatus(bookExist, newStatus);
+
+        verify(bookRepository).save(bookExist);
+        assertEquals(newStatus, bookExist.getStatus());
     }
 }
