@@ -87,4 +87,24 @@ class BookServiceTest {
 
         assertEquals(books.size(), listResponse.size());
     }
+
+    @Test
+    public void updateBook_return_book_updated(){
+        BookRequest request = new BookRequest("titulo atualizado", "descricao atualizada",
+            "473847GUm", "Messi", 2012);
+
+        Book bookExists = new Book(1L, "teste", "leia o livro",
+            "473847GUm", "Cristiano Ronaldo", 2012, BookStatus.LIVRE);
+
+        when(bookRepository.findById(1L)).thenReturn(Optional.of(bookExists));
+        when(bookRepository.save(any(Book.class))).thenAnswer(inv -> inv.getArgument(0));
+
+        BookResponse response = bookService.update(1L, request);
+
+        assertEquals(request.titulo(), response.titulo());
+        assertEquals(request.descricao(), response.descricao());
+        assertEquals(request.codigo(), response.codigo());
+        assertEquals(request.autor(), response.autor());
+        assertEquals(request.anoLancamento(), response.anoLancamento());
+    }
 }
