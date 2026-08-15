@@ -4,6 +4,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
@@ -11,6 +13,10 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 import com.joaogabriel.dev.biblioteca.dtos.BookRequest;
 import com.joaogabriel.dev.biblioteca.dtos.BookResponse;
@@ -62,5 +68,23 @@ class BookServiceTest {
         assertEquals(book.getAutor(), response.autor());
         assertEquals(book.getAnoLancamento(), response.anoLancamento());
         assertEquals(book.getStatus(), response.status());
+    }
+
+    @Test
+    public void findAll_return_list_books(){
+        Book book = new Book(1L, "teste", "leia o livro",
+            "473847GUm", "Cristiano Ronaldo", 2012, BookStatus.LIVRE);
+
+        List<Book> books = new ArrayList<>();
+        books.add(book);
+
+        Pageable pageable = PageRequest.of(0, 1);
+        Page<Book> page = new PageImpl<>(books, pageable, books.size());
+
+        when(bookRepository.findAll(pageable)).thenReturn(page);
+
+        List<BookResponse> listResponse = bookService.getAll(pageable).getContent();
+
+        assertEquals(books.size(), listResponse.size());
     }
 }
