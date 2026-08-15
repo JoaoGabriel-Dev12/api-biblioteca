@@ -121,4 +121,14 @@ class BookServiceTest {
         verify(bookRepository).save(bookExist);
         assertEquals(newStatus, bookExist.getStatus());
     }
+
+    @Test
+    public void removeBookById_sucess(){
+        Long bookId = 1L;
+
+        doNothing().when(bookRepository).deleteById(bookId);
+        bookService.deleteById(bookId);
+
+        verify(bookRepository).deleteById(bookId);
+    }
 }
