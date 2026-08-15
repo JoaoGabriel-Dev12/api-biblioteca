@@ -4,6 +4,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
+import java.util.Optional;
+
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -44,4 +46,21 @@ class BookServiceTest {
         assertEquals(request.anoLancamento(), response.anoLancamento());
     }
 
+    @Test
+    public void findById_return_book(){
+        Book book = new Book(1L, "teste", "leia o livro",
+            "473847GUm", "Cristiano Ronaldo", 2012, BookStatus.LIVRE);
+
+        when(bookRepository.findById(1L)).thenReturn(Optional.of(book));
+
+        BookResponse response = bookService.getById(1L);
+
+        assertEquals(book.getId(), response.id());
+        assertEquals(book.getTitulo(), response.titulo());
+        assertEquals(book.getDescricao(), response.descricao());
+        assertEquals(book.getCodigo(), response.codigo());
+        assertEquals(book.getAutor(), response.autor());
+        assertEquals(book.getAnoLancamento(), response.anoLancamento());
+        assertEquals(book.getStatus(), response.status());
+    }
 }
