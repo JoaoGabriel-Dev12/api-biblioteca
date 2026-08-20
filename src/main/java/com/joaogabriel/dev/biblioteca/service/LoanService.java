@@ -40,7 +40,7 @@ public class LoanService {
     public LoanResponse loan(LoanRequest dto){
         Client client = clientService.findEntity(dto.idClient());
         Book book = bookService.findEntity(dto.idBook());
-        
+
         if(bookNotFree(book.getStatus())){throw new BookNotFreeException();}
 
         bookService.updateStatus(book, BookStatus.EMPRESTADO);
@@ -49,7 +49,7 @@ public class LoanService {
         loan.setLoanDate(OffsetDateTime.now());
         loan.setDueDate(OffsetDateTime.now().plusDays(7));
 
-        repository.save(loan);
+        loan = repository.save(loan);
         mailService.sendMailLoanBook(client.getEmail(), client.getNome(), book.getTitulo(), loan.getDueDate());
         return toResponse(loan);
     }
@@ -93,11 +93,11 @@ public class LoanService {
     }
 
     private LoanResponse toResponse(Loan loan){
-        return new LoanResponse(loan.getId(), clientService.toResponse(loan.getClient()), bookService.toResponse(loan.getBook()), 
+        return new LoanResponse(loan.getId(), clientService.toResponse(loan.getClient()), bookService.toResponse(loan.getBook()),
         loan.getStatus(), loan.isLate() ,loan.getLoanDate(), loan.getDueDate());
     }
 
     private boolean bookNotFree(BookStatus status){
-        return status.equals(BookStatus.EMPRESTADO); 
+        return status.equals(BookStatus.EMPRESTADO);
     }
 }
