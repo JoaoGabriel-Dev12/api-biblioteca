@@ -2,12 +2,15 @@ package com.joaogabriel.dev.biblioteca.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.time.OffsetDateTime;
+import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -70,5 +73,29 @@ public class LoanServiceTest {
         assertEquals(loan.getId(), response.id());
         assertEquals(loan.getClient().getId(), response.client().id());
         assertEquals(loan.getBook().getId(), response.book().id());
+    }
+
+
+    @Test
+    public void returnBook_not_return(){
+        Long id = 1L;
+
+        Client client = new Client(1L, "teste", "teste@email.com",
+            "9087645324", "82329279094", "Rua 11, Bairro Centro");
+        Book book = new Book(1L, "teste", "leia o livro",
+            "473847GUm", "Cristiano Ronaldo", 2012, BookStatus.EMPRESTADO);
+
+        Loan loan = new Loan(id, client, book, LoanStatus.ACTIVE);
+
+        when(loanRepository.findById(id)).thenReturn(Optional.of(loan));
+        when(loanRepository.save(any(Loan.class))).thenAnswer(invocation -> invocation.getArgument(0));
+
+        loanService.returnBook(id);
+
+        ArgumentCaptor<Loan> captor = ArgumentCaptor.forClass(Loan.class);
+        verify(loanRepository).save(captor.capture());
+
+        Loan loanUpdate = captor.getValue();
+        assertEquals(LoanStatus.RETURNED, loanUpdate.getStatus());
     }
 }
