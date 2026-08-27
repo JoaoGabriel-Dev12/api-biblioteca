@@ -126,4 +126,42 @@ public class LoanServiceTest {
 
         assertEquals(loans.size(), listResponse.size());
     }
+
+    @Test
+    public void findAllByClient_return_loans(){
+        Book book = new Book(1L, "teste", "leia o livro",
+            "473847GUm", "Cristiano Ronaldo", 2012, BookStatus.EMPRESTADO);
+
+        Client client = new Client(1L, "teste", "teste@email.com",
+            "9087645324", "82329279094", "Rua 11, Bairro Centro");
+
+        List<Loan> loans = new ArrayList<>();
+        Loan loan = new Loan(1L, client, book, LoanStatus.ACTIVE);
+        loan.setLoanDate(OffsetDateTime.now());
+        loan.setDueDate(OffsetDateTime.now().plusDays(7));
+        loans.add(loan);
+
+        ClientResponse clientResponse = new ClientResponse(client.getId(), client.getNome(),
+            client.getEmail(), client.getTelefone(), client.getEndereco());
+
+        BookResponse bookResponse = new BookResponse(book.getId(), book.getTitulo(),
+            book.getDescricao(), book.getCodigo(), book.getAutor(), book.getAnoLancamento(),
+            book.getStatus());
+
+        when(clientService.findEntity(client.getId())).thenReturn(client);
+        when(clientService.toResponse(client)).thenReturn(clientResponse);
+        when(bookService.toResponse(book)).thenReturn(bookResponse);
+        when(loanRepository.findByClient(client)).thenReturn(loans);
+
+        List<LoanResponse> listResponse = loanService.getLoansByClient(client.getId());
+        LoanResponse loanResponse = listResponse.get(0);
+
+        assertEquals(loans.size(), listResponse.size());
+        assertEquals(loan.getId(), loanResponse.id());
+        assertEquals(loan.getClient().getId(), loanResponse.client().id());
+        assertEquals(loan.getBook().getId(), loanResponse.book().id());
+        assertEquals(loan.getStatus(), loanResponse.status());
+        assertEquals(loan.getLoanDate(), loanResponse.loanDate());
+        assertEquals(loan.getDueDate(), loanResponse.returnBookDate());
+    }
 }
