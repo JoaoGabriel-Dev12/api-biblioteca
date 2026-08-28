@@ -1,9 +1,16 @@
 package com.joaogabriel.dev.biblioteca.controller;
 
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
+
 import java.net.URI;
 import java.util.List;
+import java.util.stream.Collectors;
 
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.hateoas.CollectionModel;
+import org.springframework.hateoas.EntityModel;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -35,20 +42,31 @@ public class BookController {
         BookResponse response = service.save(dto);
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
             .buildAndExpand(response.id()).toUri();
-        
+
         return ResponseEntity.created(uri).body(response);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<BookResponse> getById(@PathVariable Long id){
+    public ResponseEntity<EntityModel<BookResponse>> getById(@PathVariable Long id){
         BookResponse response = service.getById(id);
-        return ResponseEntity.ok(response);
+        EntityModel<BookResponse> model = EntityModel.of(response, linkTo(
+            methodOn(BookController.class).getAll(PageRequest.of(0, 1))).withRel("books"));
+
+        return ResponseEntity.ok(model);
     }
 
     @GetMapping
-    public ResponseEntity<List<BookResponse>> getAll(Pageable pageable){
+    public ResponseEntity<CollectionModel<EntityModel<BookResponse>>> getAll(Pageable pageable){
         List<BookResponse> listBooks = service.getAll(pageable).getContent();
-        return ResponseEntity.ok(listBooks);
+
+        List<EntityModel<BookResponse>> listModel = listBooks.stream()
+                .map(b -> EntityModel.of(b, linkTo(methodOn(BookController.class).getById(b.id())).withSelfRel()))
+                .collect(Collectors.toList());
+
+        CollectionModel<EntityModel<BookResponse>> collectionModel = CollectionModel.of(listModel, linkTo(
+            methodOn(BookController.class).getAll(PageRequest.ofSize(1))).withSelfRel());
+
+        return ResponseEntity.ok(collectionModel);
     }
 
     @PutMapping("/{id}")

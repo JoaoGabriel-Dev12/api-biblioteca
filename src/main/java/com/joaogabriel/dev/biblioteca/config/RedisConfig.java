@@ -9,14 +9,26 @@ import org.springframework.data.redis.cache.RedisCacheConfiguration;
 import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.RedisSerializationContext.SerializationPair;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+
 @EnableCaching
 @Configuration
 public class RedisConfig {
     @Bean
     public RedisCacheConfiguration cacheConfiguration(){
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.registerModule(new JavaTimeModule());
+        mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+        mapper.activateDefaultTyping(
+            mapper.getPolymorphicTypeValidator(),
+            ObjectMapper.DefaultTyping.NON_FINAL
+        );
+
         return RedisCacheConfiguration.defaultCacheConfig()
         .entryTtl(Duration.ofMinutes(60))
         .disableCachingNullValues()
-        .serializeValuesWith(SerializationPair.fromSerializer(new GenericJackson2JsonRedisSerializer()));
+        .serializeValuesWith(SerializationPair.fromSerializer(new GenericJackson2JsonRedisSerializer(mapper)));
     }
 }
