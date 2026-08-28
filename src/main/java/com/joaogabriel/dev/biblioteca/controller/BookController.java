@@ -21,7 +21,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-import org.w3c.dom.ls.LSResourceResolver;
 
 import com.joaogabriel.dev.biblioteca.dtos.BookRequest;
 import com.joaogabriel.dev.biblioteca.dtos.BookResponse;
