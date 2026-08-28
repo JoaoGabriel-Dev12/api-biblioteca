@@ -21,6 +21,7 @@ Ferramentas utilizadas:
 - Spring Security
 - JUnit
 - Mockito
+- Hateoas
 
 ## Como rodar o projeto
 ### Requisitos
